@@ -10,19 +10,24 @@
 **/
 function main(input) {
     let currentDate, futureOrPastDate;
-
     // Split the input by comma and trim spaces
     const dates = input.text.split(',').map(date => date.trim());
-
+	const todayDate = getTodayDate();
     // Check the number of dates provided
     if (dates.length === 2) {
         currentDate = dates[0];
         futureOrPastDate = dates[1];
+		// if any is empty then replace it with current date
+		if (currentDate === "") {
+			currentDate = todayDate
+		}
+		if (futureOrPastDate === "") {
+			futureOrPastDate = todayDate;
+		}
+
     } else if (dates.length === 1) {
         // Set the current date in MM/DD/YYYY format
-        currentDate = new Date().toISOString().split('T')[0];
-        const parts = currentDate.split('-');
-        currentDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+        currentDate = todayDate;
         futureOrPastDate = dates[0];
     } else {
         input.postError('Invalid input. Please provide one or two dates.');
@@ -76,4 +81,11 @@ function isValidDate(dateString) {
 
     const date = new Date(year, month - 1, day);
     return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+}
+
+function getTodayDate() {
+	let todayDate = new Date().toISOString().split('T')[0];
+	const parts = todayDate.split('-');
+	todayDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+	return todayDate;
 }
